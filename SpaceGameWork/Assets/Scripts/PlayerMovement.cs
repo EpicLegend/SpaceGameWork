@@ -5,12 +5,15 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
 
     [SerializeField]
-    float startSpeed = 1.0f;
+    float startSpeed = .1f;
     float speed;
     [SerializeField]
     float horSpeed = 10.0f;
     [SerializeField]
     float vertSpeed = 10.0f;
+    [SerializeField]
+    GameObject forceFire;
+    ParticleSystem pSystem;
 
     public float sensitivityHor = 9.0f;      // скорость вращения по вертикальной плоскости
     public float sensitivityVert = 9.0f;     // скорость вращения по горизонтальной плоскости 
@@ -26,6 +29,7 @@ public class PlayerMovement : MonoBehaviour {
     void Start()
     {
         charController = GetComponent<CharacterController>();
+        pSystem = forceFire.GetComponent<ParticleSystem>();
 
         Rigidbody body = GetComponent<Rigidbody>();  // получаем компонент с объекта
         if (body != null)                // проверяем, существует ли этот компонент
@@ -59,6 +63,7 @@ public class PlayerMovement : MonoBehaviour {
                 float rotationY = transform.localEulerAngles.y + delta;
 
                 transform.localEulerAngles = new Vector3(_rotatiopnX, rotationY, 0);
+                
             }
 
             if (speed > 0)
@@ -67,6 +72,7 @@ public class PlayerMovement : MonoBehaviour {
                 movement.z = startSpeed * Time.deltaTime;
 
             movement = transform.TransformDirection(movement);
+            pSystem.startLifetime = speed;
             charController.Move(movement);
         }
     } 

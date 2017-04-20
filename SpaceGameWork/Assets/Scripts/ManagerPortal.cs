@@ -8,9 +8,12 @@ public class ManagerPortal : MonoBehaviour {
     [SerializeField]
     int level;
 
-    void OnTriggerEnter(Collider collision)
+    void OnTriggerEnter(Collider col)
     {
-        if (collision.gameObject.tag == "Player")
+        if (col.gameObject.tag == "Player")
+        {
+            Messenger.Broadcast(GameEvent.SHIP_USED_PORTAL);
             SceneManager.LoadScene(level);
+        }
     }
 }
