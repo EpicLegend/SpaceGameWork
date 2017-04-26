@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
 
     [SerializeField]
-    float startSpeed = .1f;
+    float startSpeed = 0.1f;
     float speed;
     [SerializeField]
     float horSpeed = 10.0f;
@@ -31,14 +31,14 @@ public class PlayerMovement : MonoBehaviour {
         charController = GetComponent<CharacterController>();
         pSystem = forceFire.GetComponent<ParticleSystem>();
 
-        Rigidbody body = GetComponent<Rigidbody>();  // получаем компонент с объекта
-        if (body != null)                // проверяем, существует ли этот компонент
+        Rigidbody body = GetComponent<Rigidbody>();  
+        if (body != null)                
             body.freezeRotation = true;  // разрешаем повороты у объекта
 
 
 
-         Cursor.lockState = CursorLockMode.Locked;   // скрывает указатель мыши
-         Cursor.visible = false;                     // в центре экрана  
+         Cursor.lockState = CursorLockMode.Locked;   
+         Cursor.visible = false;                      
 
         menu = GetComponent<Menu>();
     }
@@ -67,13 +67,29 @@ public class PlayerMovement : MonoBehaviour {
             }
 
             if (speed > 0)
-                movement.z = startSpeed * speed * Time.deltaTime;
+                movement.z = startSpeed * Time.deltaTime;      
             else if (speed == 0)
-                movement.z = startSpeed * Time.deltaTime;
-
+                movement.z = Time.deltaTime;
+                
+            
             movement = transform.TransformDirection(movement);
-            pSystem.startLifetime = speed;
             charController.Move(movement);
+            ParticleFire(movement.z);
         }
     } 
+
+    void ParticleFire(float x)
+    {
+        // Здесь есть недочет
+        // Когда отжимается W, то скорость уменьшается и меняется скорость партикла
+        // Это выглядит будто пауза при работе частиц
+        if ( x > Time.deltaTime)
+        {
+            pSystem.startLifetime = speed;
+        }
+        else
+        {
+            pSystem.startLifetime = 0.7f;
+        }
+    }
 }

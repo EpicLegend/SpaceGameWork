@@ -13,8 +13,10 @@ public class bullet : MonoBehaviour {
     {
         if(collision.gameObject.tag == "meteorite")
         {
-            Messenger.Broadcast(GameEvent.ROCKET_DESTROY_METEORITE);
-            Messenger.Broadcast(GameEvent.ENEMY_HIT);
+            // Вызов событий
+            Messenger.RocketDestroyMeteorite();
+            Messenger.EnemyHit();
+
             Destroy(gameObject);
             Destroy(collision.gameObject);
         }

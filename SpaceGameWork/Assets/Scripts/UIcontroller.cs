@@ -23,11 +23,14 @@ public class UIcontroller : MonoBehaviour {
 
     void Awake()
     {
-        Messenger.AddListener(GameEvent.ENEMY_HIT, OnEnemyHit);
-        Messenger.AddListener(GameEvent.SHIP_CONTACT_METEORITE, ShCoMe);
-        Messenger.AddListener(GameEvent.ROCKET_DESTROY_METEORITE, RoDeMe);
-        Messenger.AddListener(GameEvent.SHIP_USED_PORTAL, ShUsPo);
-
+        // подписка
+        Messenger.EnHit += OnEnemyHit;
+        Messenger.ShipConMeteor += ShCoMe;
+        Messenger.RocketDesMet += RoDeMe;        
+        Messenger.ShipUsedPo += ShUsPo;
+        
+        
+        // Вывод начальных значений 
         WriteHealth();
         WriteScore();
     }
@@ -44,7 +47,7 @@ public class UIcontroller : MonoBehaviour {
         {
             if (PlayerPrefs.HasKey("log"))
             {
-                log.text = PlayerPrefs.GetString("log");
+                SetLog(PlayerPrefs.GetString("log"));
             }
             if (PlayerPrefs.HasKey("Health"))
             {
@@ -62,11 +65,13 @@ public class UIcontroller : MonoBehaviour {
 
     void OnDestroy()
     {
-        Messenger.RemoveListener(GameEvent.ENEMY_HIT, OnEnemyHit);
-        Messenger.RemoveListener(GameEvent.SHIP_CONTACT_METEORITE, RoDeMe);
-        Messenger.RemoveListener(GameEvent.ROCKET_DESTROY_METEORITE, RoDeMe);
-        Messenger.RemoveListener(GameEvent.SHIP_USED_PORTAL, RoDeMe);
+        // отписка
+        Messenger.EnHit -= OnEnemyHit;
+        Messenger.ShipConMeteor -= ShCoMe;
+        Messenger.RocketDesMet -= RoDeMe;
+        Messenger.ShipUsedPo -= ShUsPo;
     }
+    
 
     // 3 метода для разделения ответствености 
     // и отказ от ветвления в коде
@@ -85,20 +90,20 @@ public class UIcontroller : MonoBehaviour {
     void ShUsPo()
     {
         first = false;
-        log.text = "Used teleport";
+        SetLog("Used teleport");
 
         SetLog(GameEvent.SHIP_USED_PORTAL);
         
         PlayerPrefs.SetString("first", first.ToString());
-        PlayerPrefs.SetString("log", log.text);
+        // PlayerPrefs.SetString("log", log.text);
         PlayerPrefs.SetInt("Health", health);
         PlayerPrefs.SetInt("Score", score);
     }
 
     // запись в лог
-    void SetLog(string messange)
+    void SetLog(string messenge)
     {
-        log.text += ("\n" + messange);
+        log.text += ("\n" + messenge);
     }
 
     // Начисление очков

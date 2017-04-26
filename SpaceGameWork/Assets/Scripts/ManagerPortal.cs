@@ -12,7 +12,7 @@ public class ManagerPortal : MonoBehaviour {
     {
         if (col.gameObject.tag == "Player")
         {
-            Messenger.Broadcast(GameEvent.SHIP_USED_PORTAL);
+            Messenger.ShipUsedPortal();
             SceneManager.LoadScene(level);
         }
     }
